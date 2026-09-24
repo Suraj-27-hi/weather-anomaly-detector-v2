@@ -1,0 +1,425 @@
+/* Pulse Anomaly Marker */
+@keyframes anomaly-pulse-cyan {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7);
+  }
+  70% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 18px rgba(0, 242, 254, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0);
+  }
+}
+
+@keyframes anomaly-pulse-moderate {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.75);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 22px rgba(245, 158, 11, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+@keyframes anomaly-pulse-high {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.8);
+  }
+  70% {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 25px rgba(249, 115, 22, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+@keyframes anomaly-pulse-severe {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9);
+  }
+  70% {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 28px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.anomaly-ring-low {
+  animation: anomaly-pulse-cyan 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.anomaly-ring-moderate {
+  animation: anomaly-pulse-moderate 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.anomaly-ring-high {
+  animation: anomaly-pulse-high 1.6s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.anomaly-ring-severe, .anomaly-ring-extreme {
+  animation: anomaly-pulse-severe 1.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-box {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 28, 48, 0.6) 25%,
+    rgba(27, 49, 82, 0.8) 50%,
+    rgba(15, 28, 48, 0.6) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite linear;
+  border-radius: 6px;
+}
+
+/* Raindrop falling animation */
+@keyframes fall {
+  0% {
+    transform: translateY(-10px) translateX(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(60px) translateX(-15px);
+    opacity: 0;
+  }
+}
+
+.raindrop {
+  position: absolute;
+  background: linear-gradient(180deg, transparent, #38bdf8);
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  animation: fall 0.8s linear infinite;
+}
+
+/* Sun rotation and rays */
+@keyframes rotate-sun {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.sun-rays {
+  animation: rotate-sun 24s linear infinite;
+}
+
+/* Cloud drift */
+@keyframes cloud-drift {
+  0% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(-4px);
+  }
+}
+
+.cloud-floating {
+  animation: cloud-drift 4s ease-in-out infinite;
+}
+
+/* Lightning flicker */
+@keyframes lightning-flash {
+  0%, 89%, 93%, 100% {
+    opacity: 0;
+  }
+  90%, 92% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px #fef08a);
+  }
+}
+
+.lightning-strike {
+  animation: lightning-flash 3.5s infinite;
+}
+
+/* Drawer slide */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-panel-in {
+  animation: slide-in-right 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* State Pulsing Highlight in Leaflet */
+@keyframes state-pulse {
+  0%, 100% {
+    stroke-opacity: 0.9;
+    stroke-width: 2.5;
+  }
+  50% {
+    stroke-opacity: 0.4;
+    stroke-width: 4;
+  }
+}
+
+/* ===================================================
+   WEATHER CONDITIONS DYNAMIC ANIMATIONS
+   =================================================== */
+
+/* 1. Gentle Sun floating & Rotating Rays */
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-gentle-float {
+  animation: gentle-float 4s ease-in-out infinite;
+}
+
+@keyframes spin-rays {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-rays {
+  animation: spin-rays 24s linear infinite;
+  transform-origin: center;
+}
+
+/* 2. Drifting Clouds */
+@keyframes drift-cloud {
+  0% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(-3px);
+  }
+}
+
+.animate-drift-cloud {
+  animation: drift-cloud 5s ease-in-out infinite;
+}
+
+.animate-drift-cloud-slow {
+  animation: drift-cloud 8s ease-in-out infinite reverse;
+}
+
+/* 3. Raindrops & Splash */
+@keyframes rain-fall {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(16px);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+}
+
+.animate-rain-drop-1 {
+  animation: rain-fall 0.9s cubic-bezier(0.4, 0, 1, 1) infinite;
+}
+
+.animate-rain-drop-2 {
+  animation: rain-fall 0.9s cubic-bezier(0.4, 0, 1, 1) infinite 0.3s;
+}
+
+.animate-rain-drop-3 {
+  animation: rain-fall 0.9s cubic-bezier(0.4, 0, 1, 1) infinite 0.6s;
+}
+
+@keyframes splash-ripple {
+  0%, 75% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  85% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+.animate-splash {
+  animation: splash-ripple 0.9s ease-out infinite;
+}
+
+/* 4. Drizzle (Light slow rain) */
+@keyframes drizzle-fall {
+  0% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+.animate-drizzle-1 {
+  animation: drizzle-fall 1.5s ease-in infinite;
+}
+
+.animate-drizzle-2 {
+  animation: drizzle-fall 1.5s ease-in infinite 0.5s;
+}
+
+.animate-drizzle-3 {
+  animation: drizzle-fall 1.5s ease-in infinite 1s;
+}
+
+/* 5. Heavy Rain (Fast streaks) */
+@keyframes rain-fast {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(22px);
+    opacity: 0;
+  }
+}
+
+.animate-rain-fast-1 {
+  animation: rain-fast 0.5s linear infinite;
+}
+
+.animate-rain-fast-2 {
+  animation: rain-fast 0.5s linear infinite 0.15s;
+}
+
+.animate-rain-fast-3 {
+  animation: rain-fast 0.5s linear infinite 0.3s;
+}
+
+/* 6. Thunderstorm Lightning */
+@keyframes lightning-flash-subtle {
+  0%, 91%, 95%, 100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  92%, 94% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.animate-lightning {
+  animation: lightning-flash-subtle 4.5s ease-in-out infinite;
+}
+
+/* 7. Fog / Mist drifting */
+@keyframes fog-drift {
+  0% {
+    transform: translateX(-4px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-4px);
+    opacity: 0.4;
+  }
+}
+
+.animate-fog-drift-1 {
+  animation: fog-drift 6s ease-in-out infinite;
+}
+
+.animate-fog-drift-2 {
+  animation: fog-drift 7s ease-in-out infinite reverse;
+}
+
+.animate-fog-drift-3 {
+  animation: fog-drift 8s ease-in-out infinite 1s;
+}
+
+/* 8. Snow */
+@keyframes snow-fall {
+  0% {
+    transform: translateY(-6px) translateX(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(18px) translateX(3px);
+    opacity: 0;
+  }
+}
+
+.animate-snow-1 {
+  animation: snow-fall 2.2s ease-in infinite;
+}
+
+.animate-snow-2 {
+  animation: snow-fall 2.5s ease-in infinite 0.8s;
+}
+
+.animate-snow-3 {
+  animation: snow-fall 2.8s ease-in infinite 1.4s;
+}
+

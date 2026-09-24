@@ -1,0 +1,223 @@
+/* ============================================================
+   AI VOICE PLAYER CARD
+============================================================ */
+
+.ai-voice-player-card {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 34, 62, 0.95),
+    rgba(5, 20, 38, 0.95)
+  );
+  border: 1px solid rgba(48, 140, 240, 0.35);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-voice-player-card.playing {
+  border-color: #38d99b;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(56, 217, 155, 0.2);
+}
+
+.voice-player-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.voice-player-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.voice-mic-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 8px rgba(45, 160, 255, 0.5));
+  transition: transform 0.2s ease;
+}
+
+.ai-voice-player-card.playing .voice-mic-icon {
+  filter: drop-shadow(0 0 10px rgba(56, 217, 155, 0.8));
+  animation: pulseMic 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseMic {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.15);
+  }
+}
+
+.voice-title-text strong {
+  display: block;
+  color: #edf5fe;
+  font-size: 13.5px;
+  letter-spacing: -0.2px;
+}
+
+.voice-title-text small {
+  display: block;
+  color: #79a6d2;
+  font-size: 10.5px;
+  margin-top: 2px;
+}
+
+.voice-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* EQUALIZER SOUNDWAVE */
+.voice-soundwave {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 20px;
+  padding: 0 4px;
+}
+
+.wave-bar {
+  width: 3px;
+  background: #38d99b;
+  border-radius: 2px;
+  animation: soundwaveAnim 0.8s ease-in-out infinite alternate;
+}
+
+.bar-1 { height: 6px; animation-delay: 0.1s; }
+.bar-2 { height: 16px; animation-delay: 0.3s; }
+.bar-3 { height: 10px; animation-delay: 0.2s; }
+.bar-4 { height: 18px; animation-delay: 0.4s; }
+.bar-5 { height: 8px; animation-delay: 0.15s; }
+
+@keyframes soundwaveAnim {
+  0% {
+    height: 4px;
+    opacity: 0.4;
+  }
+  100% {
+    height: 18px;
+    opacity: 1;
+  }
+}
+
+/* PLAY BUTTON */
+.voice-play-btn {
+  height: 34px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #168eea, #0f6bb3);
+  border: 1px solid rgba(80, 180, 255, 0.4);
+  border-radius: 7px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(22, 142, 234, 0.3);
+}
+
+.voice-play-btn:hover {
+  background: linear-gradient(135deg, #249af8, #1680d4);
+  box-shadow: 0 0 16px rgba(45, 160, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.voice-play-btn.active-stop {
+  background: linear-gradient(135deg, #dc3545, #b02332);
+  border-color: rgba(255, 90, 105, 0.5);
+  box-shadow: 0 0 14px rgba(220, 53, 69, 0.4);
+}
+
+.voice-play-btn .btn-icon {
+  font-size: 11px;
+}
+
+.voice-sub-btn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(80, 160, 240, 0.2);
+  border-radius: 7px;
+  color: #b0cce8;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.voice-sub-btn:hover {
+  background: rgba(45, 140, 240, 0.2);
+  color: white;
+  border-color: #38a5ff;
+}
+
+/* SCRIPT BUBBLE */
+.voice-script-bubble {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: rgba(4, 16, 30, 0.7);
+  border-left: 3px solid #2da8ff;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+  animation: fadeInScript 0.25s ease-out;
+}
+
+.ai-voice-player-card.playing .voice-script-bubble {
+  border-left-color: #38d99b;
+  background: rgba(4, 24, 20, 0.6);
+}
+
+@keyframes fadeInScript {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.voice-script-bubble p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d2e4f7;
+  font-style: italic;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+.quote-mark {
+  color: #3ca9ff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 0;
+  display: inline;
+}
+
+.end-quote {
+  margin-left: 4px;
+}
