@@ -83,8 +83,142 @@ export function generateVoiceScript({
   return script;
 }
 
-// Browser Text-To-Speech Playback
-export function playAIVoice(text, { onStart, onEnd, onError } = {}) {
+// Browser Text-To-Speech Playback with Female AI Voice Prioritization
+
+const FEMALE_KEYWORDS = [
+  "female",
+  "zira",
+  "jenny",
+  "aria",
+  "sonia",
+  "heera",
+  "neerja",
+  "samantha",
+  "victoria",
+  "karen",
+  "moira",
+  "tessa",
+  "fiona",
+  "serena",
+  "ava",
+  "allison",
+  "susan",
+  "catherine",
+  "linda",
+  "stephanie",
+  "hazel",
+  "siri",
+  "google uk english female",
+  "google us english",
+  "natural (female)",
+];
+
+const MALE_KEYWORDS = [
+  "male",
+  "david",
+  "mark",
+  "george",
+  "ravi",
+  "prabhat",
+  "rishi",
+  "guy",
+  "christopher",
+  "eric",
+  "steffan",
+  "james",
+  "richard",
+  "alex",
+  "daniel",
+  "fred",
+  "junior",
+  "ralph",
+];
+
+let userSelectedFemaleVoiceName = "";
+if (typeof localStorage !== "undefined") {
+  try {
+    userSelectedFemaleVoiceName = localStorage.getItem("preferred_female_voice") || "";
+  } catch {}
+}
+
+export function isFemaleVoice(voice) {
+  if (!voice) return false;
+  const name = (voice.name || "").toLowerCase();
+
+  // If explicitly designated male, reject
+  const isMale = MALE_KEYWORDS.some((kw) => name.includes(kw));
+  if (isMale) return false;
+
+  // If matches known female voice names or tags
+  const hasFemaleKeyword = FEMALE_KEYWORDS.some((kw) => name.includes(kw));
+  if (hasFemaleKeyword) return true;
+
+  // Check gender property if exposed by browser
+  if (voice.gender && String(voice.gender).toLowerCase() === "female") {
+    return true;
+  }
+
+  return false;
+}
+
+export function getAvailableFemaleVoices() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    return [];
+  }
+  const voices = window.speechSynthesis.getVoices() || [];
+  const englishVoices = voices.filter((v) => (v.lang || "").toLowerCase().startsWith("en"));
+  const femaleVoices = englishVoices.filter(isFemaleVoice);
+
+  if (femaleVoices.length > 0) {
+    return femaleVoices.sort((a, b) => {
+      const aScore = (a.name.includes("Natural") || a.name.includes("Neural") || a.name.includes("Google") || a.name.includes("Online")) ? 2 : 1;
+      const bScore = (b.name.includes("Natural") || b.name.includes("Neural") || b.name.includes("Google") || b.name.includes("Online")) ? 2 : 1;
+      return bScore - aScore;
+    });
+  }
+
+  return englishVoices;
+}
+
+export function getSelectedFemaleVoice() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    return null;
+  }
+  const voices = window.speechSynthesis.getVoices() || [];
+  if (!voices.length) return null;
+
+  // 1. User manual override
+  if (userSelectedFemaleVoiceName) {
+    const matched = voices.find((v) => v.name === userSelectedFemaleVoiceName);
+    if (matched) return matched;
+  }
+
+  // 2. High-priority known natural female voice
+  const femaleList = getAvailableFemaleVoices();
+  if (femaleList.length > 0 && isFemaleVoice(femaleList[0])) {
+    return femaleList[0];
+  }
+
+  // 3. Any English voice
+  const englishVoice =
+    voices.find((v) => (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Neural")) && v.lang.startsWith("en")) ||
+    voices.find((v) => v.lang === "en-IN") ||
+    voices.find((v) => v.lang.startsWith("en")) ||
+    voices[0];
+
+  return englishVoice || null;
+}
+
+export function setFemaleVoicePreference(voiceName) {
+  userSelectedFemaleVoiceName = voiceName;
+  if (typeof localStorage !== "undefined") {
+    try {
+      localStorage.setItem("preferred_female_voice", voiceName);
+    } catch {}
+  }
+}
+
+export function playAIVoice(text, { onStart, onEnd, onError, voiceName, pitch, rate } = {}) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
     console.warn("Speech Synthesis API not available in this browser environment.");
     return false;
@@ -94,33 +228,63 @@ export function playAIVoice(text, { onStart, onEnd, onError } = {}) {
     // Cancel any previous speech
     window.speechSynthesis.cancel();
 
-    // Small delay before speak helps on Chrome/Windows
-    setTimeout(() => {
+    const executeSpeak = () => {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95; // Clear natural pace
-      utterance.pitch = 1.02;
 
-      // Select natural sounding voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const bestVoice =
-        voices.find(v => (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Online") || v.name.includes("Neural")) && v.lang.startsWith("en")) ||
-        voices.find(v => v.lang === "en-IN") ||
-        voices.find(v => v.lang.startsWith("en"));
+      const voices = window.speechSynthesis.getVoices() || [];
+      let chosenVoice = null;
 
-      if (bestVoice) {
-        utterance.voice = bestVoice;
+      if (voiceName) {
+        chosenVoice = voices.find((v) => v.name === voiceName);
       }
+      if (!chosenVoice) {
+        chosenVoice = getSelectedFemaleVoice();
+      }
+
+      const voiceIsFemale = isFemaleVoice(chosenVoice);
+
+      if (chosenVoice) {
+        utterance.voice = chosenVoice;
+      }
+
+      // Feminine audio profile:
+      // If voice is confirmed female: pitch = 1.08 (natural, clear, bright tone)
+      // If voice is fallback/neutral/male: pitch = 1.25 (elevates frequency to ensure female timbre)
+      if (typeof pitch === "number") {
+        utterance.pitch = pitch;
+      } else if (voiceIsFemale) {
+        utterance.pitch = 1.08;
+      } else {
+        utterance.pitch = 1.25;
+      }
+
+      utterance.rate = typeof rate === "number" ? rate : 0.96;
 
       if (onStart) utterance.onstart = onStart;
       if (onEnd) utterance.onend = onEnd;
       if (onError) utterance.onerror = onError;
 
       window.speechSynthesis.speak(utterance);
-    }, 50);
+    };
+
+    const currentVoices = window.speechSynthesis.getVoices() || [];
+    if (currentVoices.length === 0) {
+      let triggered = false;
+      const onVoicesReady = () => {
+        if (triggered) return;
+        triggered = true;
+        window.speechSynthesis.removeEventListener("voiceschanged", onVoicesReady);
+        executeSpeak();
+      };
+      window.speechSynthesis.addEventListener("voiceschanged", onVoicesReady);
+      setTimeout(onVoicesReady, 120);
+    } else {
+      setTimeout(executeSpeak, 40);
+    }
 
     return true;
   } catch (err) {
-    console.error("AI Voice playback error:", err);
+    console.error("AI Female Voice playback error:", err);
     if (onError) onError(err);
     return false;
   }

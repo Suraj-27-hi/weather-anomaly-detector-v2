@@ -89,7 +89,7 @@ export default function AIWeatherPanel({
             <button
               type="button"
               className="ai-action-btn"
-              title={isSpeaking ? "Stop Voice Briefing" : "Listen to AI Voice Briefing"}
+              title={isSpeaking ? "Stop Voice Briefing" : "Listen to Female AI Voice Briefing"}
               onClick={handleToggleVoice}
             >
               {isSpeaking ? "⏹" : "🎙️"}
@@ -259,14 +259,18 @@ export default function AIWeatherPanel({
                       <div className="voice-brief-header">
                         <div className="voice-brief-title">
                           <span className="voice-icon">{isSpeaking ? "🔊" : "🎙️"}</span>
-                          <strong>Voice Weather Briefing</strong>
+                          <div>
+                            <strong>Voice Weather Briefing</strong>
+                            <span className="female-mini-tag">♀ Female Voice</span>
+                          </div>
                         </div>
                         <button
                           type="button"
                           className={`voice-brief-btn ${isSpeaking ? "active-stop" : ""}`}
                           onClick={handleToggleVoice}
+                          title={isSpeaking ? "Stop voice" : "Listen in natural female AI voice"}
                         >
-                          {isSpeaking ? "⏹ Stop" : "▶ Listen"}
+                          {isSpeaking ? "⏹ Stop" : "▶ Listen (Female)"}
                         </button>
                       </div>
                       <p className="voice-brief-text">“{voiceScript}”</p>

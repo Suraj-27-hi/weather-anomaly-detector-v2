@@ -1699,3 +1699,245 @@ button {
     font-size: 10px;
   }
 }
+
+/* ============================================================
+   MOBILE APP STYLING & BOTTOM NAVIGATION
+============================================================ */
+
+/* PWA Install Button */
+.install-pwa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #059669, #0284c7);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 9999px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+  animation: pwaPulse 2.5s infinite;
+  white-space: nowrap;
+}
+
+@keyframes pwaPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+  }
+}
+
+.install-pwa-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+/* Mobile App Layout */
+.app.mobile-app-layout {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+.mobile-hidden {
+  display: none !important;
+}
+
+/* Mobile Dashboard Grid */
+.dashboard.mobile-mode {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  gap: 12px;
+}
+
+.dashboard.mobile-mode .left-panel {
+  width: 100%;
+}
+
+.dashboard.mobile-mode .map-panel {
+  width: 100%;
+  height: calc(100vh - 170px);
+  min-height: 480px;
+}
+
+.dashboard.mobile-mode .map-container-wrapper,
+.dashboard.mobile-mode .main-map {
+  height: 100%;
+  min-height: 420px;
+}
+
+/* Overview tab: hide graph card so overview stays tight and focused */
+.dashboard.mobile-mode.tab-overview .graph-card {
+  display: none;
+}
+
+/* Trends tab: hide overview cards and present focused graph & stats */
+.dashboard.mobile-mode.tab-trends .selector-row,
+.dashboard.mobile-mode.tab-trends .search-and-locate-row,
+.dashboard.mobile-mode.tab-trends .status-notification,
+.dashboard.mobile-mode.tab-trends .main-weather-card,
+.dashboard.mobile-mode.tab-trends .ai-voice-player-card,
+.dashboard.mobile-mode.tab-trends .three-card-grid,
+.dashboard.mobile-mode.tab-trends .two-card-grid {
+  display: none;
+}
+
+.dashboard.mobile-mode.tab-trends .graph-card {
+  display: block;
+}
+
+/* Map tab: hide floating AI widget on mobile to give unobstructed full map view */
+.dashboard.mobile-mode.tab-map .ai-corner-widget {
+  display: none !important;
+}
+
+/* Dedicated Mobile AI Studio Panel */
+.mobile-ai-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  animation: fadeInMobile 0.25s ease-out;
+}
+
+.mobile-view-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(56, 189, 248, 0.1));
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: 10px;
+}
+
+.mobile-ai-sparkle {
+  font-size: 24px;
+  filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.7));
+}
+
+.mobile-view-heading h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.mobile-view-heading small {
+  display: block;
+  font-size: 11px;
+  color: #f472b6;
+  margin-top: 2px;
+}
+
+@keyframes fadeInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Bottom Navigation Bar */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  background: rgba(6, 15, 30, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 9999;
+}
+
+.mobile-nav-item {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 10.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mobile-nav-item:active {
+  transform: scale(0.95);
+}
+
+.mobile-nav-icon {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.mobile-nav-label {
+  letter-spacing: 0.2px;
+}
+
+.mobile-nav-item.active {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.mobile-nav-item.active .mobile-nav-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+}
+
+.mobile-nav-item.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2.5px;
+  background: linear-gradient(90deg, #38bdf8, #ec4899);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+.mobile-voice-glow {
+  position: absolute;
+  top: 10px;
+  right: calc(50% - 14px);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 8px #ec4899;
+  animation: glowPink 1.5s infinite alternate;
+}
+
+@keyframes glowPink {
+  from {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+

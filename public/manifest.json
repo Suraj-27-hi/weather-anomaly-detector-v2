@@ -1,0 +1,19 @@
+{
+  "short_name": "WeatherAI",
+  "name": "Weather Anomaly Detector AI",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#050b14",
+  "theme_color": "#07152b",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "description": "Real-time meteorological intelligence, AI voice updates, Doppler radar, ArcGIS satellite, and anomaly detection."
+}

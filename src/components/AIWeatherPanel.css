@@ -623,7 +623,20 @@
   font-weight: 500;
 }
 
-/* RESPONSIVE */
+.female-mini-tag {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #f472b6;
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  padding: 1px 6px;
+  border-radius: 9999px;
+  margin-top: 2px;
+}
+
+/* RESPONSIVE & MOBILE APP STYLING */
 @media (max-width: 1000px) {
   .ai-corner-widget {
     position: relative;
@@ -632,6 +645,45 @@
     width: 100%;
     max-width: 100%;
     margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ai-corner-widget {
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+
+  .ai-widget-header {
+    padding: 10px 12px;
+  }
+
+  .ai-widget-actions {
+    gap: 4px;
+  }
+
+  .ai-action-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .voice-brief-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .voice-brief-btn {
+    width: 100%;
+    justify-content: center;
+    height: 38px;
+    font-size: 12.5px;
+  }
+
+  .ai-comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
 

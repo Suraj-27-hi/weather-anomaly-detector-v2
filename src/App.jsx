@@ -1183,11 +1183,67 @@ export default function App() {
   }, [aiResult, current, selectedLocation.name, temperature, condition, result, daily])
 
   // ----------------------------------------------------------
+  // MOBILE APP & PWA INTEGRATION
+  // ----------------------------------------------------------
+  const [mobileTab, setMobileTab] = useState("overview") // 'overview' | 'map' | 'ai' | 'trends'
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  )
+  const [installPrompt, setInstallPrompt] = useState(null)
+  const [isInstalled, setIsInstalled] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    window.addEventListener("resize", handleResize)
+    handleResize()
+
+    const handleBeforeInstall = (e) => {
+      e.preventDefault()
+      setInstallPrompt(e)
+    }
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall)
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(display-mode: standalone)").matches
+    ) {
+      setIsInstalled(true)
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall)
+    }
+  }, [])
+
+  const handleInstallApp = async () => {
+    if (!installPrompt) return
+    installPrompt.prompt()
+    const { outcome } = await installPrompt.userChoice
+    if (outcome === "accepted") {
+      setIsInstalled(true)
+      setInstallPrompt(null)
+    }
+  }
+
+  const handleSwitchTab = (tab) => {
+    setMobileTab(tab)
+    if (tab === "map") {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"))
+      }, 120)
+    }
+  }
+
+  // ----------------------------------------------------------
   // RENDER
   // ----------------------------------------------------------
 
   return (
-    <div className="app">
+    <div className={`app ${isMobile ? "mobile-app-layout" : ""}`}>
       {/* ======================================================
           HEADER
       ====================================================== */}
@@ -1216,6 +1272,17 @@ export default function App() {
         </div>
 
         <div className="header-status">
+          {installPrompt && !isInstalled && (
+            <button
+              type="button"
+              className="install-pwa-btn"
+              onClick={handleInstallApp}
+              title="Install as native Mobile App"
+            >
+              📱 Install App
+            </button>
+          )}
+
           <span className="live-dot" />
           <span>Live Data</span>
 
@@ -1246,12 +1313,12 @@ export default function App() {
           MAIN
       ====================================================== */}
 
-      <main className="dashboard">
+      <main className={`dashboard ${isMobile ? `mobile-mode tab-${mobileTab}` : ""}`}>
         {/* ==================================================
             LEFT DASHBOARD
         ================================================== */}
 
-        <section className="left-panel">
+        <section className={`left-panel ${isMobile && mobileTab !== "overview" && mobileTab !== "trends" ? "mobile-hidden" : ""}`}>
 
           {/* LOCATION & STATE ROW */}
           <div className="selector-row">
@@ -1682,7 +1749,7 @@ export default function App() {
             RIGHT MAP
         ================================================== */}
 
-        <section className="map-panel">
+        <section className={`map-panel ${isMobile && mobileTab !== "map" ? "mobile-hidden" : ""}`}>
 
           <div className="map-header">
             <div className="map-tabs">
@@ -1846,7 +1913,96 @@ export default function App() {
             )}
           </div>
         </section>
+
+        {/* ==================================================
+            MOBILE DEDICATED AI STUDIO VIEW
+        ================================================== */}
+        {isMobile && mobileTab === "ai" && (
+          <section className="mobile-ai-panel">
+            <div className="mobile-view-heading">
+              <span className="mobile-ai-sparkle">🎙️</span>
+              <div>
+                <h2>AI Meteorological Voice Studio</h2>
+                <small>Natural Female Voice Narrator & Predictive Anomaly Intel</small>
+              </div>
+            </div>
+
+            {activeVoiceScript && (
+              <AIVoicePlayer
+                voiceScript={activeVoiceScript}
+                locationName={selectedLocation.name}
+              />
+            )}
+
+            <AIWeatherPanel
+              aiResult={aiResult}
+              isLoading={aiLoading}
+              onRefresh={() =>
+                runAIAnalysis(
+                  selectedLocation.name,
+                  weather?.current,
+                  hourlyWeather,
+                  weather?.daily,
+                  result?.anomalies
+                )
+              }
+              geminiKey={geminiApiKey}
+              onSaveGeminiKey={(key) => {
+                setGeminiApiKey(key)
+                if (key) {
+                  localStorage.setItem("gemini_api_key", key)
+                } else {
+                  localStorage.removeItem("gemini_api_key")
+                }
+              }}
+            />
+          </section>
+        )}
       </main>
+
+      {/* ======================================================
+          MOBILE BOTTOM APP NAVIGATION BAR
+      ====================================================== */}
+      {isMobile && (
+        <nav className="mobile-bottom-nav">
+          <button
+            type="button"
+            className={`mobile-nav-item ${mobileTab === "overview" ? "active" : ""}`}
+            onClick={() => handleSwitchTab("overview")}
+          >
+            <span className="mobile-nav-icon">🌦️</span>
+            <span className="mobile-nav-label">Intel</span>
+          </button>
+
+          <button
+            type="button"
+            className={`mobile-nav-item ${mobileTab === "map" ? "active" : ""}`}
+            onClick={() => handleSwitchTab("map")}
+          >
+            <span className="mobile-nav-icon">🛰️</span>
+            <span className="mobile-nav-label">Live Map</span>
+          </button>
+
+          <button
+            type="button"
+            className={`mobile-nav-item ${mobileTab === "ai" ? "active" : ""}`}
+            onClick={() => handleSwitchTab("ai")}
+          >
+            <span className="mobile-nav-icon">🎙️</span>
+            <span className="mobile-nav-label">Female AI</span>
+            {activeVoiceScript && <span className="mobile-voice-glow" />}
+          </button>
+
+          <button
+            type="button"
+            className={`mobile-nav-item ${mobileTab === "trends" ? "active" : ""}`}
+            onClick={() => handleSwitchTab("trends")}
+          >
+            <span className="mobile-nav-icon">📈</span>
+            <span className="mobile-nav-label">Trends</span>
+          </button>
+        </nav>
+      )}
 
       {/* ERROR */}
       {error && (
